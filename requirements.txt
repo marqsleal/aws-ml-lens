@@ -1,0 +1,77 @@
+# =========================
+# CORE DATA / ML
+# =========================
+pandas
+numpy
+scikit-learn
+scipy
+
+# Modelos (opcional mas recomendado)
+xgboost
+lightgbm
+
+# =========================
+# DATA LAKE (S3 / MINIO)
+# =========================
+boto3
+s3fs
+
+# =========================
+# MLFLOW (MODEL REGISTRY)
+# =========================
+mlflow
+
+# =========================
+# API (SERVING)
+# =========================
+fastapi
+uvicorn
+pydantic
+
+# =========================
+# FEATURE STORE (SIMULAÇÃO)
+# =========================
+redis
+
+# =========================
+# MONITORAMENTO
+# =========================
+prometheus-client
+
+# =========================
+# UTILIDADES
+# =========================
+python-dotenv
+requests
+tqdm
+
+# =========================
+# DATA FORMAT
+# =========================
+pyarrow
+fastparquet
+
+# =========================
+# VISUALIZAÇÃO (OPCIONAL)
+# =========================
+matplotlib
+seaborn
+
+# =========================
+# NOTEBOOK
+# =========================
+jupyter
+ipykernel
+
+# =========================
+# QUALIDADE DE CÓDIGO
+# =========================
+pytest
+black
+ruff
+mypy
+
+# =========================
+# KAGGLE (DATASET)
+# =========================
+kaggle
