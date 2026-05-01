@@ -34,8 +34,7 @@ upload_dataset:
 	$(VENV_PYTHON) -m src.ingestion.upload_dataset
 
 .PHONY: ingest_all
-ingest_all:
-	download_dataset upload_dataset
+ingest_all: download_dataset upload_dataset
 
 .PHONY: build_sot
 build_sot:
