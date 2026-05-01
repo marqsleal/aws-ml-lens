@@ -221,5 +221,5 @@ __marimo__/
 .codex
 minio/
 
-.csv
-.parquet
+*.csv
+*.parquet
