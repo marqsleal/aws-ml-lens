@@ -1,5 +1,6 @@
 import logging
 from io import BytesIO
+from pathlib import Path
 
 import boto3
 import pandas as pd
@@ -51,3 +52,14 @@ def get_df_from_s3(s3_client, bucket: str, key: str):
         raise ValueError(f"Unsupported file extension for DataFrame loading: {key}")
     logger.info("File downloaded and loaded into DataFrame successfully")
     return df
+
+
+def upload_file_to_s3(local_path: Path, bucket: str, bucket_key: str) -> None:
+    logger.info("Uploading file to S3: %s", local_path)
+    if not local_path.exists():
+        raise FileNotFoundError(f"File not found: {local_path}")
+
+    s3 = get_s3_client()
+    ensure_bucket(s3, bucket)
+    s3.upload_file(str(local_path), bucket, bucket_key)
+    logger.info("File uploaded to S3 %s: %s", bucket, bucket_key)

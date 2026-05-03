@@ -1,14 +1,13 @@
 import uuid
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 from config import settings
 from logger import get_logger
-from src.ingestion.upload_dataset import BUCKET_KEY as SOR_BUCKET_KEY
+from src.ingestion.upload_dataset import SOR_BUCKET_KEY as SOR_BUCKET_KEY
 from src.processing.upload_sot import SOT_PATH
-from src.utils.s3_client import get_df_from_s3, get_s3_client
+from src.utils.s3_utils import get_df_from_s3, get_s3_client
 
 logger = get_logger(__name__)
 
@@ -48,17 +47,12 @@ def build_sot(df: pd.DataFrame) -> pd.DataFrame:
     logger.info("Building SOT DataFrame")
     sot_df: pd.DataFrame = df.copy()
 
-    sot_df["amount_log"] = np.log1p(sot_df["Amount"]).astype("float64")
-    logger.info("Column created: amount_log")
-
     sot_df["Time"] = sot_df["Time"].astype("int64")
     logger.info("Column casted: Time -> int64")
     sot_df["Class"] = sot_df["Class"].astype("int8")
     logger.info("Column casted: Class -> int8")
     sot_df["Amount"] = sot_df["Amount"].astype("float64")
     logger.info("Column casted: Amount -> float64")
-    sot_df["amount_log"] = sot_df["amount_log"].astype("float64")
-    logger.info("Column casted: amount_log -> float64")
 
     sot_df = sot_df.sort_values("Time").reset_index(drop=True)
     logger.info("DataFrame sorted by Time")
@@ -78,8 +72,6 @@ def validate_sot(df_raw: pd.DataFrame, df_sot: pd.DataFrame) -> None:
         raise ValueError("transaction_id is not unique")
     if not df_sot["Time"].is_monotonic_increasing:
         raise ValueError("Time is not sorted in ascending order")
-    if not np.isfinite(df_sot["amount_log"]).all():
-        raise ValueError("amount_log has invalid values")
     logger.info("SOT output validated")
 
 
