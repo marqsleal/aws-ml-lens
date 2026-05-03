@@ -47,6 +47,17 @@ upload_sot:
 .PHONY: process_all
 process_all: build_sot upload_sot
 
+.PHONY: build_spec
+build_spec:
+	$(VENV_PYTHON) -m src.feature_engineering.build_spec
+
+.PHONY: upload_spec
+upload_spec:
+	$(VENV_PYTHON) -m src.feature_engineering.upload_spec
+
+.PHONY: features_all
+features_all: build_spec upload_spec
+
 
 # Conteiners
 .PHONY: stack_up
