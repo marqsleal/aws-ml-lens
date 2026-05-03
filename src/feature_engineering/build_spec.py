@@ -79,6 +79,7 @@ def build_temporal_featutures(df: pd.DataFrame) -> pd.DataFrame:
     df["tx_count_last_1h"] = (
         df.set_index("t_dt")["transaction_id"].rolling("1h").count().shift(1).values
     )
+    df["tx_count_last_1h"] = df["tx_count_last_1h"].fillna(0.0)
     logger.info("Column created: tx_count_last_1h = rolling count of transactions in last 1 hour")
 
     logger.info("Temporal features built")
@@ -108,6 +109,7 @@ def build_amount_features(df: pd.DataFrame) -> pd.DataFrame:
     df["avg_amount_last_1h"] = (
         df.set_index("t_dt")["amount_log"].rolling("1h").mean().shift(1).values
     )
+    df["avg_amount_last_1h"] = df["avg_amount_last_1h"].fillna(0.0)
     logger.info("Column created: avg_amount_last_1h = rolling mean of amount_log in last 1 hour")
 
     logger.info("Amount features built")
@@ -242,12 +244,11 @@ def validate_spec(df: pd.DataFrame) -> None:
     if (df["v_extreme_count"] < 0).any() or (df["v_extreme_count"] > len(V_COLS)).any():
         raise ValueError("v_extreme_count must be within [0, 28]")
 
-    nan_allowed_cols = {"tx_count_last_1h", "avg_amount_last_1h"}
     numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
     for col in numeric_cols:
         if np.isinf(df[col]).any():
             raise ValueError(f"Column has infinite values: {col}")
-        if col not in nan_allowed_cols and df[col].isna().any():
+        if df[col].isna().any():
             raise ValueError(f"Column has NaN values: {col}")
 
     logger.info("SPEC output validated")
